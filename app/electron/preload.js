@@ -7,37 +7,46 @@ const ContextMenu = require("secure-electron-context-menu").default;
 // Create the electron store to be made available in the renderer process
 const store = new Store();
 
-const getVideoSources= new Promise(async (resolve,reject)=>{
+const getVideoSources= ()=>(
   desktopCapturer.getSources({ 
     types: ['window', 'screen'],    
-    fetchWindowIcons: true
   })
-  .then(response=>resolve(response))
-  .catch(err=>reject(err))
+);
+
+const saveRecordedFile= (data,filePath)=>new Promise(async (resolve,reject)=>{
+  try{
+    const blob= new Blob(data,{
+      type: 'video/webm; codecs=vp9'
+    });
+    const buffer = Buffer.from( await blob.arrayBuffer() );
+    await fs.promises.writeFile(filePath,buffer)  
+    resolve()
+  }
+  catch{ 
+    reject()
+  }
 });
-
-const saveRecordedFile= async (data)=>{
-  const blob= new Blob(data,{
-    type: 'video/webm; codecs=vp9'
-  });
-
-  const buffer = Buffer.from( await blob.arrayBuffer() );
-
-  const filePath= await dialog.showSaveDialog({
-    buttonLabel: 'Save Video',
-    defaultPath: `vid-${Date().now()}.webm`
-  })
-  if( typeof(filePath) !== 'undefined' )
-    fs.writeFile(filePath,buffer,()=>console.log('hooryyy'))
-}
 
 // Expose protected methods that allow the renderer process to use
 // the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld("api", {
   i18nextElectronBackend: i18nextBackend.preloadBindings(ipcRenderer),
   store: store.preloadBindings(ipcRenderer, fs),
-  contextMenu: ContextMenu.preloadBindings(ipcRenderer),
+  contextMenu: ContextMenu.preloadBindings(ipcRenderer), 
+  send: (channel, data) => {
+      // whitelist channels
+      let validChannels = ["get-file-path"];
+      if (validChannels.includes(channel)) {
+          ipcRenderer.send(channel, data);
+      }
+  },
+  receive: (channel, func) => {
+      let validChannels = ["receive-file-path"];
+      if (validChannels.includes(channel)) {
+          // Deliberately strip event as it includes `sender` 
+          ipcRenderer.on(channel, (event, ...args) => func(...args));
+      }
+  },
   getVideoSources,
   saveRecordedFile
-
 });

@@ -2,6 +2,7 @@ import React from "react";
 import ROUTES from "Constants/routes";
 import { Link } from "react-router-dom";
 import "./welcome.css";
+import Video from "../../components/Video";
 
 class Welcome extends React.Component {
   render() {
@@ -22,6 +23,7 @@ class Welcome extends React.Component {
             View a sample of a custom context menu.
           </Link> <br />
         </div>
+        <Video />
       </div>
     );
   }

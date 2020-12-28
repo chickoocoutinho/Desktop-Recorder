@@ -4,7 +4,8 @@ const {
   BrowserWindow,
   session,
   ipcMain,
-  Menu
+  Menu,
+  dialog
 } = require("electron");
 const {
   default: installExtension,
@@ -258,4 +259,17 @@ app.on("remote-get-current-window", (event, webContents) => {
 
 app.on("remote-get-current-web-contents", (event, webContents) => {
   event.preventDefault();
+});
+
+ipcMain.on('get-file-path',async (event,args)=>{
+  try{
+    const filePath= await dialog.showSaveDialog({
+      buttonLabel: 'Save Video',
+      defaultPath: `vid-${(new Date()).toJSON()}.webm`
+    })
+    event.sender.send('receive-file-path',filePath);
+  }
+  catch{
+    event.sender.send('receive-file-path',{filePath: null});
+  }
 });
