@@ -13,18 +13,13 @@ const getVideoSources= ()=>(
   })
 );
 
-const saveRecordedFile= (data,filePath)=>new Promise(async (resolve,reject)=>{
-  try{
-    const blob= new Blob(data,{
-      type: 'video/webm; codecs=vp9'
-    });
-    const buffer = Buffer.from( await blob.arrayBuffer() );
-    await fs.promises.writeFile(filePath,buffer)  
-    resolve()
-  }
-  catch{ 
-    reject()
-  }
+const saveRecordedFile= (data,filePath)=>new Promise((resolve,reject)=>{
+    data = data.replace(/^data:(.*?);base64,/, ""); // <--- make it any type
+    data = data.replace(/ /g, '+'); // <--- this is important
+    fs.writeFile(filePath,data, 'base64' ,(err) => {
+      if (err) reject();
+      resolve();
+    })  
 });
 
 // Expose protected methods that allow the renderer process to use
@@ -50,3 +45,5 @@ contextBridge.exposeInMainWorld("api", {
   getVideoSources,
   saveRecordedFile
 });
+
+

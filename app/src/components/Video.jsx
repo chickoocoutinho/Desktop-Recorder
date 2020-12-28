@@ -50,20 +50,32 @@ const Video = () => {
     setMediaRecorder(mediaRecorderTemp);
   };
 
+  const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+
   const handleFileSave= (e)=>{
-    console.log(e,recordedChunks)
-    window.api.send('get-file-path')
-    window.api.receive('receive-file-path',({filePath})=>{
-      if(filePath===null)
-        alert('Please try again')
-      else if(typeof(filePath) === 'undefined')
-        console.log(filePath)
-      else{
-        window.api.saveRecordedFile(recordedChunks,filePath)
-        .then(()=> recordedChunks.length=0)
-        .catch(()=>alert('Please try again 2'))
-      }
-    });
+      window.api.send('get-file-path');
+      //wait for ipc main to communicate
+      window.api.receive('receive-file-path',async ({filePath})=>{
+        if(filePath===null)
+          alert('Please try again')
+        else if(typeof(filePath) === 'undefined')
+          return(null)
+        else{
+          let chunks= await toBase64(recordedChunks[0]);
+          console.log(chunks)
+          window.api.saveRecordedFile(chunks,filePath)
+          .then(()=> console.log(recordedChunks))//.length=0)
+          .catch((err)=>{
+            console.log(err)
+            alert('Please try again 2')
+          })
+        }
+      });
   }
 
   return (
