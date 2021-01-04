@@ -2,7 +2,7 @@ import React from "react";
 import ROUTES from "Constants/routes";
 import { Link } from "react-router-dom";
 import "./welcome.css";
-import Video from "../../components/Video";
+import Video from "../../components/Video/Video";
 
 class Welcome extends React.Component {
   render() {

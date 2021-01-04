@@ -1,25 +1,16 @@
 import React, {useRef, useState, useEffect} from 'react';
-import Select from 'react-select';
+import SourceDropdown from '../SourceDropdown/SourceDropdown';
+import VideoControls from './VideoControls';
 
 const Video = () => {
   const [recordingSource, setRecordingSource]= useState([]);
-  const [selectedRecordingSource, setSelectedRecordingSource]= useState([]);
-  const [sourceLoading, setSourceLoading]= useState(true);
-
   const [mediaRecorder,setMediaRecorder]= useState(null);
-
-  //const [recordedChunks, setRecordedChunks]= useState([])
-
-  useEffect(()=>{console.log('rerendered')},[])
+  const [selectedOptionId,setSelectedOptionId]= useState(null);
 
   useEffect(()=>{
     window.api.getVideoSources()
     .then((response)=>{
-      response.forEach(element =>({
-        ...element,
-        selected: false
-      }));
-      console.log(response);
+      console.log(response)
       setRecordingSource(response)
     })
     .catch((err)=>alert("Please try again"));
@@ -30,7 +21,7 @@ const Video = () => {
   const videoTag = useRef(null);
 
   const selectSource= async (source)=>{
-    setSelectedRecordingSource(source)
+    setSelectedOptionId(source.id)
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: false,
       video: {
@@ -45,7 +36,7 @@ const Video = () => {
     videoTag.current.play();
 
     const mediaRecorderTemp = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
-    mediaRecorderTemp.ondataavailable = (e)=>/*{console.log(e);setRecordedChunks([e.data])}*/recordedChunks.push(e.data);
+    mediaRecorderTemp.ondataavailable = (e)=>recordedChunks.push(e.data);
     mediaRecorderTemp.onstop = handleFileSave;
     setMediaRecorder(mediaRecorderTemp);
   };
@@ -80,19 +71,10 @@ const Video = () => {
 
   return (
     <div>
-      <Select
-        isLoading={sourceLoading}
-        defaultValue={selectedRecordingSource}
-        onChange={selectSource}
-        options={recordingSource}
-      />
+      <SourceDropdown list={recordingSource} selectSource={selectSource}
+      selectedOptionId={selectedOptionId}/>
       <video ref={videoTag} />
-      <button onClick={()=>{mediaRecorder.start();console.log(mediaRecorder.state);}}>
-        Start
-      </button>
-      <button onClick={()=>mediaRecorder.stop()}>
-        Stop
-      </button>
+      <VideoControls mediaRecorder={mediaRecorder} selectedOptionId={selectedOptionId} />
     </div>
   );
 }

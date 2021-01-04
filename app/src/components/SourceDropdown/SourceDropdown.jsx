@@ -1,21 +1,41 @@
-import React from 'react';
-import Select from 'react-select';
+import React,{useState, useEffect} from 'react';
+import styles from './SourceDropdown.module.css';4
+import ClickAwayListener from 'react-click-away-listener';
 
+const SourceDropdown = ({list,selectSource,selectedOptionId}) => {
+    const [isDropdownOpen, setIsDropdownOpen]= useState(false);
+    const [isLoading, setIsLoading]= useState(false);
 
-const SourceDropdown = ({title,list,setList,selectedOtioon,setSelectedOtioon}) => {
+    useEffect(()=>{
+        setIsLoading(list.length===0);
+    },[list]);
 
-    const resetThenSet = (id,key) => {
-        console.log(id,key);
-        setList((prevState)=>{
-            let temp= [...prevState];
-            temp.forEach((item) => item.selected = false);
-            temp[id].selected = true;   
-            return temp; 
-        })
+    const handleSourceSelect=(value)=>{
+        setIsDropdownOpen(false);
+        selectSource(value);
     }
 
     return (
-        null
+        <div className={styles.container}>
+        <button onClick={()=>setIsDropdownOpen(true)}> Select Video Source</button>
+        {
+            isDropdownOpen &&
+            <div className={styles.dropdown}>
+                
+                {   
+                    isLoading?
+                    <p>Loaging</p>:
+                    list.map((value)=>(
+                        <div key={value.id} onClick={()=>handleSourceSelect(value)}
+                        className={selectedOptionId===value.id? slyles.selected: null}>
+                            {value.name}
+                        </div>
+                    ))
+                }
+                
+            </div>
+        }
+        </div>
     );
 }
 
