@@ -3,6 +3,7 @@ import SourceDropdown from '../SourceDropdown/SourceDropdown';
 import VideoControls from './VideoControls';
 
 import styles from './Video.module.css';
+import './recordingIndicator.css';
 
 const Video = () => {
   const [recordingSource, setRecordingSource]= useState([]);
@@ -14,7 +15,7 @@ const Video = () => {
     .then((response)=>{
       let sources= [];
       response.forEach((value)=>{
-        if( value.name !== 'Entire Screen' && value.name !== 'My app' )
+        if( value.name !== 'Entire Screen' && value.name !== 'Desktop Recorder' )
           sources.push(value)
       })
       setRecordingSource(sources)

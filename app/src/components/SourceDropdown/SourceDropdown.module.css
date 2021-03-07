@@ -11,8 +11,10 @@
     height: 40px;
     width: 260px;
     border-radius: 10px;
-    background-color: blueviolet;
-    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.2);
+    background-color: #633cae;
+    box-shadow: 0px 4px 12px 0px rgba(0,0,0,0.4);
+    color: #fafafa;
+    font-size: 18px;
 }
 .button:hover{
     cursor: pointer;
@@ -27,11 +29,11 @@
     flex-direction: column;
     position: absolute;
     z-index: 1000;
-    background-color: #f1f1f1;
+    background-color: #fff;
     width: 250px;
     max-height: 500px;
     overflow: auto;
-    box-shadow: 2px 2px 4px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 4px 12px 0px rgba(0,0,0,0.4);
     left: 5px
 }
 
@@ -53,4 +55,8 @@
 .selected{
     background-color: green !important;
     color: #fff !important;
+}
+
+.light-Primary{
+    background-color: #633cae ;
 }

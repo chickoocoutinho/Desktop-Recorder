@@ -54,7 +54,8 @@ async function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    title: `Getting started with secure-electron-template (v${app.getVersion()})`,
+    title: 'Desktop Recorder',
+    icon: __dirname + '../../resources/icon.ico',
     webPreferences: {
       devTools: isDev,
       nodeIntegration: false,

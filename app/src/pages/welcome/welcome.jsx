@@ -3,15 +3,13 @@ import React from "react";
 import "./welcome.css";
 import Video from "../../components/Video/Video";
 
-class Welcome extends React.Component {
-  render() {
-    return (
-      <div id="welcome">
+const Welcome = () => {
+  return (
+    <div className={'light'}>
         <Video />
-      </div>
-    );
-  }
+    </div>
+  );
 }
 
-
 export default Welcome;
+

@@ -1,6 +1,4 @@
-const { Menu, MenuItem, BrowserWindow } = require("electron");
-const i18nBackend = require("i18next-electron-fs-backend");
-const whitelist = require("../localization/whitelist");
+const { Menu  } = require("electron");
 const isMac = process.platform === "darwin";
 
 var MenuBuilder = function(mainWindow, appName) {
@@ -58,106 +56,6 @@ var MenuBuilder = function(mainWindow, appName) {
               }
         ]
       },
-      // { role: "editMenu" }
-      {
-        label: "Edit",
-        submenu: [
-          {
-            role: "undo"
-          },
-          {
-            role: "redo"
-          },
-          {
-            type: "separator"
-          },
-          {
-            role: "cut"
-          },
-          {
-            role: "copy"
-          },
-          {
-            role: "paste"
-          },
-          ...(isMac
-            ? [
-                {
-                  role: "pasteAndMatchStyle"
-                },
-                {
-                  role: "delete"
-                },
-                {
-                  role: "selectAll"
-                },
-                {
-                  type: "separator"
-                },
-                {
-                  label: "Speech",
-                  submenu: [
-                    {
-                      role: "startspeaking"
-                    },
-                    {
-                      role: "stopspeaking"
-                    }
-                  ]
-                }
-              ]
-            : [
-                {
-                  role: "delete"
-                },
-                {
-                  type: "separator"
-                },
-                {
-                  role: "selectAll"
-                }
-              ])
-        ]
-      },
-      // { role: "viewMenu" }
-      {
-        label: "View",
-        submenu: [
-          {
-            role: "reload"
-          },
-          {
-            role: "forcereload"
-          },
-          {
-            role: "toggledevtools"
-          },
-          {
-            type: "separator"
-          },
-          {
-            role: "resetzoom"
-          },
-          {
-            role: "zoomin"
-          },
-          {
-            role: "zoomout"
-          },
-          {
-            type: "separator"
-          },
-          {
-            role: "togglefullscreen"
-          }
-        ]
-      },
-      // language menu
-      {
-        label: "Language",
-        submenu: whitelist.buildSubmenu(i18nBackend.changeLanguageRequest)
-      },
-      // { role: "windowMenu" }
       {
         label: "Window",
         submenu: [
