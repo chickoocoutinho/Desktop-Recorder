@@ -28,7 +28,7 @@ To get a local copy up and running follow these simple steps.
 3. Run Development server
    ```sh
    npm run dev
-  ```
+    ```
 
 
 ## Features (secure electron template)
