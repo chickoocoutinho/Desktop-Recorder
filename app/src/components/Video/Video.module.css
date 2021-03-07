@@ -1,0 +1,11 @@
+.container{
+    width: 100%;
+    display: grid;
+    grid-template: auto/100%;
+    row-gap: 20px ;
+
+}
+
+.video{
+    width: 100%;
+}

@@ -2,6 +2,8 @@ import React, {useRef, useState, useEffect} from 'react';
 import SourceDropdown from '../SourceDropdown/SourceDropdown';
 import VideoControls from './VideoControls';
 
+import styles from './Video.module.css';
+
 const Video = () => {
   const [recordingSource, setRecordingSource]= useState([]);
   const [mediaRecorder,setMediaRecorder]= useState(null);
@@ -10,8 +12,12 @@ const Video = () => {
   useEffect(()=>{
     window.api.getVideoSources()
     .then((response)=>{
-      console.log(response)
-      setRecordingSource(response)
+      let sources= [];
+      response.forEach((value)=>{
+        if( value.name !== 'Entire Screen' && value.name !== 'My app' )
+          sources.push(value)
+      })
+      setRecordingSource(sources)
     })
     .catch((err)=>alert("Please try again"));
   },[]);
@@ -21,7 +27,7 @@ const Video = () => {
   const videoTag = useRef(null);
 
   const selectSource= async (source)=>{
-    setSelectedOptionId(source.id)
+    setSelectedOptionId(source.id);
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: false,
       video: {
@@ -70,10 +76,10 @@ const Video = () => {
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       <SourceDropdown list={recordingSource} selectSource={selectSource}
       selectedOptionId={selectedOptionId}/>
-      <video ref={videoTag} />
+      <video ref={videoTag} className={styles.video} />
       <VideoControls mediaRecorder={mediaRecorder} selectedOptionId={selectedOptionId} />
     </div>
   );
